@@ -1,37 +1,37 @@
 ﻿using System.Collections.Generic;
 
-namespace WpfApplication1
+namespace HomePlotter
 {
     public struct Capteur
     {
-        public string type;
-        public string id;
-        public string description;
-        public string box;
-        public string lieu;
-        public Grandeur grandeur;
-        public Valeur valeur;
-        public List<Seuil> seuils;
+        public string Type;
+        public string Id;
+        public string Description;
+        public string Box;
+        public string Lieu;
+        public Grandeur Grandeur;
+        public Valeur Valeur;
+        public List<Seuil> Seuils;
         
     }
 
     public struct Grandeur
     {
-        public string name;
-        public string unite;
-        public string abreviation;
+        public string Name;
+        public string Unite;
+        public string Abreviation;
     }
 
     public struct Valeur
     {
-        public string type;
-        public string min;
-        public string max;
+        public string Type;
+        public string Min;
+        public string Max;
     }
 
     public struct Seuil
     {
-        public string description;
-        public string valeur;
+        public string Description;
+        public string Valeur;
     }
 }

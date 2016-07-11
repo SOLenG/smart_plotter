@@ -4,82 +4,69 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using static System.IO.Path;
 
-namespace WpfApplication1
+namespace HomePlotter
 {
-    using static System.Console;
-    using static System.IO.File;
+    using static Console;
+    using static File;
 
     public class TreatmentData
     {
+        public static IEnumerable<Capteur> Capteurs { get; private set; } = new List<Capteur>();
 
-        private static IEnumerable<Capteur> ListCapteurs = new List<Capteur>();
-        public static IEnumerable<Capteur> capteurs {
-            get { return ListCapteurs; }
-            private set { ListCapteurs = value; }
-        }
+        public static IEnumerable<Netatmo> Netatmos { get; private set; } = new List<Netatmo>();
 
-        private static IEnumerable<Netatmo> Listnetatmos = new List<Netatmo>();
-        public static IEnumerable<Netatmo> netatmos {
-            get { return Listnetatmos; }
-            private set { Listnetatmos = value; }
-        }
+        public static Dictionary<string, List<Netatmo>> DicNetatmos { get; private set; } = new Dictionary<string, List<Netatmo>>();
 
-        private static Dictionary<string, List<Netatmo>> dictionaryNetatmos = new Dictionary<string, List<Netatmo>>();
-
-        public static Dictionary<string, List<Netatmo>> dicNetatmos
-        {
-            get { return dictionaryNetatmos; }
-            private set { dictionaryNetatmos = value; }
-        }
         /**
          * 
          */
-        public void loadCapteurs()
+        public void LoadCapteurs()
         {
-            String capteurfilepath = Program.capteurfilepath;
+            var capteurfilepath = Program.Capteurfilepath;
 
             if (!Exists(capteurfilepath))
             {
                 WriteLine($"{capteurfilepath} not exist");
-                ReadKey(true);
+                //ReadKey(true);
                 return;
             }
             
 
-            XDocument xd = XDocument.Load(capteurfilepath);
+            var xd = XDocument.Load(capteurfilepath);
             //Run query
-            ListCapteurs = from data in xd.Descendants("capteur")
-                let Grandeur = new Grandeur()
+            Capteurs = from data in xd.Descendants("capteur")
+                let grandeur = new Grandeur()
                 {
-                    abreviation =
+                    Abreviation =
                         (data.Element("grandeur") != null)
                             ? data.Element("grandeur").Attribute("abreviation").Value
                             : null,
-                    name = (data.Element("grandeur") != null) ? data.Element("grandeur").Attribute("nom").Value : null,
-                    unite =
+                    Name = (data.Element("grandeur") != null) ? data.Element("grandeur").Attribute("nom").Value : null,
+                    Unite =
                         (data.Element("grandeur") != null) ? data.Element("grandeur").Attribute("unite").Value : null
                 }
-                let Valeur = new Valeur()
+                let valeur = new Valeur()
                 {
-                    type = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("type").Value : null,
-                    max = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("max").Value : null,
-                    min = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("min").Value : null
+                    Type = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("type").Value : null,
+                    Max = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("max").Value : null,
+                    Min = (data.Element("valeur") != null) ? data.Element("valeur").Attribute("min").Value : null
                 }
                 select new Capteur()
                 {
-                    id = data.Element("id").Value,
-                    type = data.Attribute("type").Value,
-                    lieu = data.Element("lieu").Value,
-                    description = data.Element("description").Value,
-                    box = data.Element("box").Value,
-                    grandeur = Grandeur,
-                    valeur = Valeur,
-                    seuils = (from seuil in data.Descendants("seuils")
+                    Id = data.Element("id").Value,
+                    Type = data.Attribute("type").Value,
+                    Lieu = data.Element("lieu").Value,
+                    Description = data.Element("description").Value,
+                    Box = data.Element("box").Value,
+                    Grandeur = grandeur,
+                    Valeur = valeur,
+                    Seuils = (from seuil in data.Descendants("seuils")
                         select new Seuil()
                         {
-                            description = seuil.Element("seuil").Attribute("description").Value,
-                            valeur = seuil.Element("seuil").Attribute("valeur").Value
+                            Description = seuil.Element("seuil").Attribute("description").Value,
+                            Valeur = seuil.Element("seuil").Attribute("valeur").Value
                         }).ToList()
 
 
@@ -89,48 +76,56 @@ namespace WpfApplication1
         /**
          * 
          */
-        public void loadAllEntrees()
+        public void LoadAllEntrees()
         {
-            String netatmoDirPath = Program.netatmoDirPath;
+            var netatmoDirPath = Program.NetatmoDirPath;
 
-            foreach (string filesName in Directory.GetFiles(netatmoDirPath))
+            try
             {
-                if (Path.GetExtension(filesName) == ".dt")
+                foreach (var filesName in Directory.GetFiles(netatmoDirPath))
+            {
+                if (GetExtension(filesName) == ".dt")
                 {
-                    loadDatasNetatmo(filesName);
+                    LoadDatasNetatmo(filesName);
                 }
             }
+            }
+            catch (DirectoryNotFoundException)
+            {
+                
+                return;
+            }
+            
         }
 
         /**
          * @var string filepath : chemin absolue du fichier cible
          */
-        private void loadDatasNetatmo(string filePath)
+        private static void LoadDatasNetatmo(string filePath)
         {
-            Listnetatmos = from line in ReadLines(filePath)
+            Netatmos = from line in ReadLines(filePath)
                            let datas = Regex.Split(line, "(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)")
-                           let _date = Convert.ToDateTime(datas[1].Replace("\"", "")) 
+                           let date = Convert.ToDateTime(datas[1].Replace("\"", "")) 
                            let lastDatas = Regex.Split(datas[2], " ")
-                           let _id = lastDatas[1]
-                           let _value = lastDatas[2]
+                           let id = lastDatas[1]
+                           let value = lastDatas[2]
                        select new Netatmo()
                        {
-                           capteurId = _id,
-                           date = _date,
-                           value = _value
+                           CapteurId = id,
+                           Date = date,
+                           Value = value
                        };
 
-            foreach (var netatmo in Listnetatmos)
+            foreach (var netatmo in Netatmos)
             {
-                if (dictionaryNetatmos.ContainsKey(netatmo.capteurId))
+                if (DicNetatmos.ContainsKey(netatmo.CapteurId))
                 {
-                    dictionaryNetatmos[netatmo.capteurId].Add(netatmo);
+                    DicNetatmos[netatmo.CapteurId].Add(netatmo);
                 }
                 else
                 {
-                    List<Netatmo> dataNetatmo = new List<Netatmo>();
-                    dataNetatmo.Add(netatmo);
-                    dictionaryNetatmos.Add(netatmo.capteurId, dataNetatmo);
+                    var dataNetatmo = new List<Netatmo> {netatmo};
+                    DicNetatmos.Add(netatmo.CapteurId, dataNetatmo);
                 }
             }
         }

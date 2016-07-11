@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace WpfApplication1
+namespace HomePlotter
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -14,39 +12,33 @@ namespace WpfApplication1
         public MainWindow()
         {
             InitializeComponent();
-            Program.init();
+            Program.Init();
             
             // for generate the textBox values 
-            generateTextBoxSalle();
+            GenerateTextBoxSalle();
             // for generate the date
-            generateTextBoxDate();
+            GenerateTextBoxDate();
             this.DataContext = new Graph();
         }
 
-        private void generateTextBoxSalle()
+        private void GenerateTextBoxSalle()
         {
-            foreach (Capteur capteur in TreatmentData.capteurs)
+            foreach (var capteur in TreatmentData.Capteurs)
             {
-                comboSalle.Items.Add(capteur.id);
+                comboSalle.Items.Add(capteur.Id);
             }
         }
 
-        private void generateTextBoxDate()
+        private void GenerateTextBoxDate()
         {
-            /*string[] list = files.getDateDirecotry();
-            foreach (string file in list)
+            foreach (var capteur in TreatmentData.Capteurs)
             {
-                comboDate.Items.Add(file);
-            }*/
-            foreach (Capteur capteur in TreatmentData.capteurs)
-            {
-                if (!TreatmentData.dicNetatmos.ContainsKey(capteur.id)) { continue; }
+                if (!TreatmentData.DicNetatmos.ContainsKey(capteur.Id)) { continue; }
                 
-
-                foreach (Netatmo netatmo in TreatmentData.dicNetatmos[capteur.id])
+                foreach (var netatmo in TreatmentData.DicNetatmos[capteur.Id])
                 {
-                    if (!comboDate.Items.Contains(netatmo.date.ToString("yyyy/MM/dd")))
-                        comboDate.Items.Add(netatmo.date.ToString("yyyy/MM/dd"));
+                    if (!comboDate.Items.Contains(netatmo.Date.ToString("yyyy/MM/dd")))
+                        comboDate.Items.Add(netatmo.Date.ToString("yyyy/MM/dd"));
                 }
                
             }
@@ -59,7 +51,7 @@ namespace WpfApplication1
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            StringBuilder stringBuilder = new StringBuilder(comboDate.Text);
+            var stringBuilder = new StringBuilder(comboDate.Text);
             DataContext = new Graph(stringBuilder, comboSalle.Text);
         }
     }

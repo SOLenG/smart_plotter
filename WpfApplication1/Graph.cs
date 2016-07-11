@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 
-namespace WpfApplication1
+namespace HomePlotter
 {
-    class Graph
+    internal class Graph
     {
         public PlotModel GraphModel { get; set; }
 
@@ -26,7 +24,7 @@ namespace WpfApplication1
         {
             GraphModel = new PlotModel();
 
-            string unite = TreatmentData.capteurs.FirstOrDefault(element => element.id == id).grandeur.unite;
+            var unite = TreatmentData.Capteurs.FirstOrDefault(element => element.Id == id).Grandeur.Unite;
             SetGraphAxesAndTitle(id, unite);
             GenerateDataByDay(sb, id);
         }
@@ -49,11 +47,13 @@ namespace WpfApplication1
           };
 
             /** Génération Axe Y  */
-            LinearAxis ordonnee = new LinearAxis();
-            ordonnee.Title = "ppm|%|C°|mm|dB|mbar";
+            var ordonnee = new LinearAxis
+            {
+                Title = "ppm|%|C°|mm|dB|mbar",
+                Position = AxisPosition.Left
+            };
             if (unite != null)
                 ordonnee.Title = unite;
-            ordonnee.Position = AxisPosition.Left;
 
             /** Ajout des axes au PlotModel */
             GraphModel.Axes.Add(abscisse);
@@ -62,15 +62,15 @@ namespace WpfApplication1
 
         private void GenerateData()
         {
-            foreach (Capteur capteur in TreatmentData.capteurs)
+            foreach (var capteur in TreatmentData.Capteurs)
             {
-                if (!TreatmentData.dicNetatmos.ContainsKey(capteur.id)) { continue; }
+                if (!TreatmentData.DicNetatmos.ContainsKey(capteur.Id)) { continue; }
 
-                LineSeries donnees = new LineSeries();
+                var donnees = new LineSeries();
                 
-                foreach (Netatmo netatmo in TreatmentData.dicNetatmos[capteur.id])
+                foreach (var netatmo in TreatmentData.DicNetatmos[capteur.Id])
                 {
-                    donnees.Points.Add(new DataPoint(DateTimeAxis.ToDouble(netatmo.date), Convert.ToDouble(netatmo.value)));
+                    donnees.Points.Add(new DataPoint(DateTimeAxis.ToDouble(netatmo.Date), Convert.ToDouble(netatmo.Value)));
                 }
 
                 GraphModel.Series.Add(donnees);
@@ -79,22 +79,28 @@ namespace WpfApplication1
 
         public void GenerateDataByDay(StringBuilder st, string id)
         {
-            DateTime dt = DateTime.Parse(st.ToString());
+            if (!TreatmentData.DicNetatmos.ContainsKey(id)) return;
 
-            if (TreatmentData.dicNetatmos.ContainsKey(id))
+            DateTime dt;
+            try
             {
-
-                LineSeries donnees = new LineSeries();
-                foreach (Netatmo netatmo in TreatmentData.dicNetatmos[id])
-                {
-                    if (netatmo.date.Day == dt.Day)
-                    {
-                        donnees.Points.Add(new DataPoint(DateTimeAxis.ToDouble(netatmo.date), Convert.ToDouble(netatmo.value)));
-                    }
-                }
-
-                GraphModel.Series.Add(donnees);
+                 dt = DateTime.Parse(st.ToString());
             }
+            catch (Exception)
+            {
+                return;
+            }
+
+            var donnees = new LineSeries();
+            foreach (var netatmo in TreatmentData.DicNetatmos[id])
+            {
+                if (netatmo.Date.Day == dt.Day)
+                {
+                    donnees.Points.Add(new DataPoint(DateTimeAxis.ToDouble(netatmo.Date), Convert.ToDouble(netatmo.Value)));
+                }
+            }
+
+            GraphModel.Series.Add(donnees);
         }
     }
 }

@@ -1,18 +1,21 @@
-﻿namespace WpfApplication1
+﻿using System;
+
+namespace HomePlotter
 {
+    using System.Configuration;
 
     public class Program
     {
-        public static string capteurfilepath = "c:\\ecole\\capteurs.xtim";
-        public static string netatmoDirPath = "c:\\ecole\\netatmo\\";
-        public static string entreeDirPath = "c:\\ecole\\entree\\";
-        public static string salleDirPath = "c:\\ecole\\salle\\";
+        public static string Capteurfilepath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["capteursPath"];
+        public static string NetatmoDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["netatmoPath"];
+        public static string EntreeDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["entreePath"];
+        public static string SalleDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["sallePath"];
 
-        public static void init()
+        public static void Init()
         {
-            TreatmentData treatment = new TreatmentData();
-            treatment.loadCapteurs();
-            treatment.loadAllEntrees();
+            var treatment = new TreatmentData();
+            treatment.LoadCapteurs();
+            treatment.LoadAllEntrees();
         }
     }
 }
