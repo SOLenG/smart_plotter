@@ -68,6 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Camembert.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TraitmentData.cs" />
     <Page Include="MainWindow.xaml">

@@ -64,11 +64,11 @@ namespace HomePlotter
         {
             foreach (var capteur in TreatmentData.Capteurs)
             {
-                if (!TreatmentData.DicNetatmos.ContainsKey(capteur.Id)) { continue; }
+                if (!TreatmentData.NetatmosDictionary.ContainsKey(capteur.Id)) { continue; }
 
                 var donnees = new LineSeries();
                 
-                foreach (var netatmo in TreatmentData.DicNetatmos[capteur.Id])
+                foreach (var netatmo in TreatmentData.NetatmosDictionary[capteur.Id])
                 {
                     donnees.Points.Add(new DataPoint(DateTimeAxis.ToDouble(netatmo.Date), Convert.ToDouble(netatmo.Value)));
                 }
@@ -79,7 +79,7 @@ namespace HomePlotter
 
         public void GenerateDataByDay(StringBuilder st, string id)
         {
-            if (!TreatmentData.DicNetatmos.ContainsKey(id)) return;
+            if (!TreatmentData.NetatmosDictionary.ContainsKey(id)) return;
 
             DateTime dt;
             try
@@ -92,7 +92,7 @@ namespace HomePlotter
             }
 
             var donnees = new LineSeries();
-            foreach (var netatmo in TreatmentData.DicNetatmos[id])
+            foreach (var netatmo in TreatmentData.NetatmosDictionary[id])
             {
                 if (netatmo.Date.Day == dt.Day)
                 {

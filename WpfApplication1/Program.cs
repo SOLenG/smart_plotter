@@ -10,6 +10,7 @@ namespace HomePlotter
         public static string NetatmoDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["netatmoPath"];
         public static string EntreeDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["entreePath"];
         public static string SalleDirPath = Environment.CurrentDirectory + ConfigurationManager.AppSettings["sallePath"];
+        public static string ImageHouse = Environment.CurrentDirectory + ConfigurationManager.AppSettings["imageHouse"];
 
         public static void Init()
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,11 +18,22 @@ namespace HomePlotter
 
         public static IEnumerable<Netatmo> Netatmos { get; private set; } = new List<Netatmo>();
 
-        public static Dictionary<string, List<Netatmo>> DicNetatmos { get; private set; } = new Dictionary<string, List<Netatmo>>();
+        public static Dictionary<string, Capteur> CapteurDictionary { get; private set; } =
+            new Dictionary<string, Capteur>();
+
+        public static Dictionary<string, List<Netatmo>> NetatmosDictionary { get; private set; } =
+            new Dictionary<string, List<Netatmo>>();
+
+        public static Dictionary<string, List<Netatmo>> NetatmosByDateDictionary { get; private set; } =
+            new Dictionary<string, List<Netatmo>>();
+
+        public static Dictionary<string, Dictionary<string, double>> PresenceByRoomHouresDictionary { get; private set; } =
+            new Dictionary<string, Dictionary<string, double>>();
 
         /**
          * 
          */
+
         public void LoadCapteurs()
         {
             var capteurfilepath = Program.Capteurfilepath;
@@ -32,7 +44,7 @@ namespace HomePlotter
                 //ReadKey(true);
                 return;
             }
-            
+
 
             var xd = XDocument.Load(capteurfilepath);
             //Run query
@@ -68,14 +80,66 @@ namespace HomePlotter
                             Description = seuil.Element("seuil").Attribute("description").Value,
                             Valeur = seuil.Element("seuil").Attribute("valeur").Value
                         }).ToList()
-
-
                 };
+            foreach (var capteur in Capteurs)
+            {
+                if (CapteurDictionary.ContainsKey(capteur.Id))
+                {
+                    CapteurDictionary[capteur.Id] = capteur;
+                }
+                else
+                {
+                    CapteurDictionary.Add(capteur.Id, capteur);
+                }
+            }
+        }
+
+        public void TimePresenceByRoom(ArrayList dateWeek)
+        {
+            foreach (var day in dateWeek)
+            {
+                TimePresenceByRoom(day.ToString());
+            }
+        }
+
+        public void TimePresenceByRoom(string day)
+        {
+            if (PresenceByRoomHouresDictionary.ContainsKey(day)) return;
+
+            var netatmos = NetatmosByDateDictionary[day];
+            var datas = new Dictionary<string, double>();
+
+            foreach (var netatmo in netatmos)
+            {
+                if (!CapteurDictionary.ContainsKey(netatmo.CapteurId)) continue;
+                if (!IsPresent(netatmo)) continue;
+                
+                var room = CapteurDictionary[netatmo.CapteurId].Lieu;
+
+                if (datas.ContainsKey(room))
+                {
+                    datas[room] = datas[room] + 5 / 60;
+                }
+                else
+                {
+                    datas.Add(room, 5 / 60);
+                }
+            }
+
+            PresenceByRoomHouresDictionary[day] = datas;
+        }
+
+        private static bool IsPresent(Netatmo netatmo)
+        {
+            if (!CapteurDictionary.ContainsKey(netatmo.CapteurId) || CapteurDictionary[netatmo.CapteurId].Seuils.Count <= 0 ) return false;
+
+            return Convert.ToDouble(netatmo.Value) >= Convert.ToDouble(CapteurDictionary[netatmo.CapteurId].Seuils.First().Valeur);
         }
 
         /**
          * 
          */
+
         public void LoadAllEntrees()
         {
             var netatmoDirPath = Program.NetatmoDirPath;
@@ -83,49 +147,58 @@ namespace HomePlotter
             try
             {
                 foreach (var filesName in Directory.GetFiles(netatmoDirPath))
-            {
-                if (GetExtension(filesName) == ".dt")
                 {
-                    LoadDatasNetatmo(filesName);
+                    if (GetExtension(filesName) == ".dt")
+                    {
+                        LoadDatasNetatmo(filesName);
+                    }
                 }
-            }
             }
             catch (DirectoryNotFoundException)
             {
-                
                 return;
             }
-            
         }
 
         /**
          * @var string filepath : chemin absolue du fichier cible
          */
+
         private static void LoadDatasNetatmo(string filePath)
         {
             Netatmos = from line in ReadLines(filePath)
-                           let datas = Regex.Split(line, "(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)")
-                           let date = Convert.ToDateTime(datas[1].Replace("\"", "")) 
-                           let lastDatas = Regex.Split(datas[2], " ")
-                           let id = lastDatas[1]
-                           let value = lastDatas[2]
-                       select new Netatmo()
-                       {
-                           CapteurId = id,
-                           Date = date,
-                           Value = value
-                       };
+                let datas = Regex.Split(line, "(?:^|,)(\"(?:[^\"]+|\"\")*\"|[^,]*)")
+                let date = Convert.ToDateTime(datas[1].Replace("\"", ""))
+                let lastDatas = Regex.Split(datas[2], " ")
+                let id = lastDatas[1]
+                let value = lastDatas[2]
+                where CapteurDictionary.ContainsKey(id) && CapteurDictionary[id].Seuils.Count > 0
+                select new Netatmo()
+                {
+                    CapteurId = id,
+                    Date = date,
+                    Value = value
+                };
 
             foreach (var netatmo in Netatmos)
             {
-                if (DicNetatmos.ContainsKey(netatmo.CapteurId))
+                if (NetatmosDictionary.ContainsKey(netatmo.CapteurId))
                 {
-                    DicNetatmos[netatmo.CapteurId].Add(netatmo);
+                    NetatmosDictionary[netatmo.CapteurId].Add(netatmo);
                 }
                 else
                 {
                     var dataNetatmo = new List<Netatmo> {netatmo};
-                    DicNetatmos.Add(netatmo.CapteurId, dataNetatmo);
+                    NetatmosDictionary.Add(netatmo.CapteurId, dataNetatmo);
+                }
+                if (NetatmosByDateDictionary.ContainsKey(netatmo.Date.ToString("yyyyMMdd")))
+                {
+                    NetatmosByDateDictionary[netatmo.Date.ToString("yyyyMMdd")].Add(netatmo);
+                }
+                else
+                {
+                    var dataNetatmo = new List<Netatmo> {netatmo};
+                    NetatmosByDateDictionary.Add(netatmo.Date.ToString("yyyyMMdd"), dataNetatmo);
                 }
             }
         }
