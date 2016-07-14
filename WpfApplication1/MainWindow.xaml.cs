@@ -16,7 +16,7 @@ namespace HomePlotter
         {
             InitializeComponent();
             Program.Init();
-            
+
             // for generate the textBox values 
             GenerateTextBoxSalle();
             // for generate the date
@@ -36,20 +36,21 @@ namespace HomePlotter
         {
             foreach (var capteur in TreatmentData.Capteurs)
             {
-                if (!TreatmentData.NetatmosDictionary.ContainsKey(capteur.Id)) { continue; }
-                
+                if (!TreatmentData.NetatmosDictionary.ContainsKey(capteur.Id))
+                {
+                    continue;
+                }
+
                 foreach (var netatmo in TreatmentData.NetatmosDictionary[capteur.Id])
                 {
                     if (!ComboDate.Items.Contains(netatmo.Date.ToString("yyyy/MM/dd")))
                         ComboDate.Items.Add(netatmo.Date.ToString("yyyy/MM/dd"));
                 }
-               
             }
         }
 
         private void comboSalle_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -66,20 +67,19 @@ namespace HomePlotter
             // ... See if a date is selected.
             if (calendar.SelectedDate.HasValue)
             {
-                TreatmentData t = new TreatmentData();
+                var t = new TreatmentData();
                 // ... Display SelectedDate in Title.
                 var date = calendar.SelectedDate.Value;
                 this.Title = date.ToShortDateString();
-                var dateWeek = new ArrayList();
-                for (int i = 0; i < 7; i++)
-                {
-                    dateWeek.Add(date.AddDays(i).ToString("yyyyMMdd"));
-                    t.TimePresenceByRoom(dateWeek);
-                    Console.Write(dateWeek[i] + " ");
-                }
+                var dateWeek = new ArrayList {date.ToString("yyyyMMdd")};
+                /*for (int i = 0; i < 7; i++)
+               {
+                   dateWeek.Add(date.AddDays(i).ToString("yyyyMMdd"));
+               }*/
 
+                t.TimePresenceByRoom(dateWeek);
 
-                DataContext = new Camembert();
+                DataContext = new Camembert(dateWeek);
                 Console.WriteLine();
                 return;
             }

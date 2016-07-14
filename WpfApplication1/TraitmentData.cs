@@ -27,7 +27,7 @@ namespace HomePlotter
         public static Dictionary<string, List<Netatmo>> NetatmosByDateDictionary { get; private set; } =
             new Dictionary<string, List<Netatmo>>();
 
-        public static Dictionary<string, Dictionary<string, double>> PresenceByRoomHouresDictionary { get; private set; } =
+        public static Dictionary<string, Dictionary<string, double>> PresenceByRoomHouresDictionary { get; private set;} =
             new Dictionary<string, Dictionary<string, double>>();
 
         /**
@@ -105,35 +105,59 @@ namespace HomePlotter
         public void TimePresenceByRoom(string day)
         {
             if (PresenceByRoomHouresDictionary.ContainsKey(day)) return;
+            if (!NetatmosByDateDictionary.ContainsKey(day)) return;
 
             var netatmos = NetatmosByDateDictionary[day];
-            var datas = new Dictionary<string, double>();
+            var datas = new Dictionary<string, ArrayList>();
+            var alreadyFound = new Dictionary<string, ArrayList>();
 
             foreach (var netatmo in netatmos)
             {
                 if (!CapteurDictionary.ContainsKey(netatmo.CapteurId)) continue;
+                if (CapteurDictionary[netatmo.CapteurId].Grandeur.Abreviation != "ppm") continue;
+                if (netatmo.Date.ToString("yyyyMMdd") != day) continue;
                 if (!IsPresent(netatmo)) continue;
-                
+
                 var room = CapteurDictionary[netatmo.CapteurId].Lieu;
+                var date = netatmo.Date.ToString("f");
+                var value = Convert.ToDouble(netatmo.Value);
 
                 if (datas.ContainsKey(room))
                 {
-                    datas[room] = datas[room] + 5 / 60;
+                    // Si la date a déjà été traité on passe
+                    if (alreadyFound[room].Contains(date)) continue;
+                    // Si la valeur relevé par le capteur est inférieure a la précédente on passe
+                    if (Convert.ToDouble(datas[room][datas[room].Count - 1]) > value) continue;
+
+                    datas[room].Add(value); //5.0 / 60.0
+                    alreadyFound[room].Add(date);
+
+                    // si le nombre dépasse 288 (représence le nombre de 5min dans une journée)
+                    // nous supprimons le dernier enregistrement de datas
+                    // cela peut être du au fait que les enregistrement ne sont pas réellement réalisé toute les 5 minutes
+                    if (!(datas[room].Count > 288.0)) continue;
+                    datas[room].RemoveAt(datas[room].Count - 1);
                 }
                 else
                 {
-                    datas.Add(room, 5 / 60);
+                    datas.Add(room, new ArrayList {value}); //5.0 / 60.0
+                    alreadyFound.Add(room, new ArrayList {date});
                 }
             }
 
-            PresenceByRoomHouresDictionary[day] = datas;
+            // on prépare le resultat final
+            var result = datas.Keys.ToDictionary<string, string, double>(room => room, room => datas[room].Count);
+
+            PresenceByRoomHouresDictionary[day] = result;
         }
 
         private static bool IsPresent(Netatmo netatmo)
         {
-            if (!CapteurDictionary.ContainsKey(netatmo.CapteurId) || CapteurDictionary[netatmo.CapteurId].Seuils.Count <= 0 ) return false;
+            if (!CapteurDictionary.ContainsKey(netatmo.CapteurId) ||
+                CapteurDictionary[netatmo.CapteurId].Seuils.Count <= 0) return false;
 
-            return Convert.ToDouble(netatmo.Value) >= Convert.ToDouble(CapteurDictionary[netatmo.CapteurId].Seuils.First().Valeur);
+            return Convert.ToDouble(netatmo.Value) >=
+                   Convert.ToDouble(CapteurDictionary[netatmo.CapteurId].Seuils.First().Valeur);
         }
 
         /**
@@ -182,6 +206,7 @@ namespace HomePlotter
 
             foreach (var netatmo in Netatmos)
             {
+                // enregistre dans l'attribut tout les netatmo trouvé
                 if (NetatmosDictionary.ContainsKey(netatmo.CapteurId))
                 {
                     NetatmosDictionary[netatmo.CapteurId].Add(netatmo);
@@ -191,6 +216,7 @@ namespace HomePlotter
                     var dataNetatmo = new List<Netatmo> {netatmo};
                     NetatmosDictionary.Add(netatmo.CapteurId, dataNetatmo);
                 }
+                // enregistre par jour les netatmo trouvé
                 if (NetatmosByDateDictionary.ContainsKey(netatmo.Date.ToString("yyyyMMdd")))
                 {
                     NetatmosByDateDictionary[netatmo.Date.ToString("yyyyMMdd")].Add(netatmo);
