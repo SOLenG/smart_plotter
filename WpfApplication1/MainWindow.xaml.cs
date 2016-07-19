@@ -21,7 +21,7 @@ namespace HomePlotter
             GenerateTextBoxSalle();
             // for generate the date
             GenerateTextBoxDate();
-            this.DataContext = new Graph();
+            DataContext = new Graph();
         }
 
         private void GenerateTextBoxSalle()
@@ -67,20 +67,10 @@ namespace HomePlotter
             // ... See if a date is selected.
             if (calendar.SelectedDate.HasValue)
             {
-                var t = new TreatmentData();
-                // ... Display SelectedDate in Title.
+
                 var date = calendar.SelectedDate.Value;
-                this.Title = date.ToShortDateString();
-                var dateWeek = new ArrayList {date.ToString("yyyyMMdd")};
-                /*for (int i = 0; i < 7; i++)
-               {
-                   dateWeek.Add(date.AddDays(i).ToString("yyyyMMdd"));
-               }*/
-
-                t.TimePresenceByRoom(dateWeek);
-
-                DataContext = new Camembert(dateWeek);
-                Console.WriteLine();
+                Title = date.ToShortDateString();
+                DataContext = new Camembert(date);
                 return;
             }
 
