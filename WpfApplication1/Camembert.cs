@@ -26,7 +26,7 @@ namespace HomePlotter
 
         public List<string> WeekList(DateTime date)
         {
-            var dateWeek = new List<string> { date.ToString("yyyyMMdd")};
+            var dateWeek = new List<string> {date.ToString("yyyyMMdd")};
 
             for (var i = 0; i < 7; i++)
             {
@@ -47,7 +47,7 @@ namespace HomePlotter
 
             var dateWeek = dateWeeks[1];
 
-            ModelP1 = new PlotModel { Title = "Camembert" };
+            ModelP1 = new PlotModel {Title = "Camembert"};
             SourceImg = Program.ImageHouse;
 
             if (dateWeek.Count <= 0)
@@ -90,7 +90,11 @@ namespace HomePlotter
                     }
                 }
             }
+            checkVariation(dateWeeks);
 
+            /**
+             * Set le block le moyenne de temps passé dans les pieces dans la semaine selectyionné
+             */
             foreach (var room in datas.Keys)
             {
                 var val = (datas[room]*5.0/60.0)/dateWeek.Count;
@@ -106,6 +110,79 @@ namespace HomePlotter
             }
 
             ModelP1.Series.Add(seriesP1);
+        }
+
+        /**
+         * Attend un List<List<string>> de 3 element minimum
+         */
+
+        private static void checkVariation(IReadOnlyList<List<string>> weeksList)
+        {
+            if (weeksList.Count < 3)
+                return;
+
+
+            for (var i = 0; i < 7; i++)
+            {
+                var datePrev = weeksList[0][i];
+                var dateCur = weeksList[1][i];
+                var dateNext = weeksList[2][i];
+                var dates = new List<string>
+                {
+                    datePrev,
+                    dateCur,
+                    dateNext
+                };
+                var variations = new List<Dictionary<string, double>>();
+                var rooms = new List<string>();
+                var j = 0;
+                foreach (var day in dates)
+                {
+                    variations.Add(new Dictionary<string, double>());
+                    foreach (var room in TreatmentData.PresenceByRoomHouresDictionary[day].Keys)
+                    {
+                        if (!rooms.Contains(room))
+                            rooms.Add(room);
+                    }
+                    j++;
+                }
+
+                foreach (var room in rooms)
+                {
+                    var val1 = 0.0;
+                    var val2 = 0.0;
+                    var val3 = 0.0;
+
+                    if (TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(datePrev) &&
+                        TreatmentData.PresenceByRoomHouresDictionary[datePrev].ContainsKey(room))
+                    {
+                        val1 = TreatmentData.PresenceByRoomHouresDictionary[datePrev][room];
+                    }
+                    if (TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(dateCur) &&
+                        TreatmentData.PresenceByRoomHouresDictionary[dateCur].ContainsKey(room))
+                    {
+                        val2 = TreatmentData.PresenceByRoomHouresDictionary[dateCur][room];
+                    }
+                    if (TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(dateNext) &&
+                        TreatmentData.PresenceByRoomHouresDictionary[dateNext].ContainsKey(room))
+                    {
+                        val3 = TreatmentData.PresenceByRoomHouresDictionary[dateNext][room];
+                    }
+
+                    if (val1/val2*100 >= 20.0)
+                    {
+                        Console.Write(0);
+                    }
+                    if (val2/val3*100 >= 20.0)
+                    {
+                        Console.Write(2);
+                    }
+                    if (val3/val1*100 >= 20.0)
+                    {
+                        Console.Write(4);
+                    }
+                }
+            }
         }
 
         private static PieSeries EmptyCamembert()
