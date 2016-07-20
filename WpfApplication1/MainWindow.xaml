@@ -8,92 +8,71 @@
         Title="MainWindow" Height="564.706" Width="956.373">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Calendar x:Name="CalandarWeek" SelectionMode="SingleRange" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="0"
-                  Grid.RowSpan="3" Grid.ColumnSpan="3" Grid.Column="0" Height="247" Width="345" DisplayDateStart="2014-01-31" DisplayDateEnd="2014-09-25" DisplayDate="2014-01-31" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
+        <Calendar x:Name="CalandarWeek" SelectionMode="SingleRange" HorizontalAlignment="Left" Margin="10,10,0,0"
+                  VerticalAlignment="Top" Grid.Row="0"
+                  Grid.RowSpan="3" Grid.ColumnSpan="3" Grid.Column="0" Height="247" Width="345"
+                  DisplayDateStart="2014-01-31" DisplayDateEnd="2014-09-25" DisplayDate="2014-01-31"
+                  SelectedDatesChanged="Calendar_SelectedDatesChanged" />
 
-        <Rectangle Fill="LightSkyBlue" Stroke="LightSkyBlue" StrokeThickness="4" Grid.ColumnSpan="5" Margin="1,0,-1,51" Grid.RowSpan="3" RenderTransformOrigin="3.13,0.547" Grid.Column="3" >
+        <Rectangle Fill="LightSkyBlue" Stroke="LightSkyBlue" StrokeThickness="4" Grid.ColumnSpan="5" Margin="1,0,-1,51"
+                   Grid.RowSpan="3" RenderTransformOrigin="3.13,0.547" Grid.Column="3">
             <Rectangle.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleY="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="-24.064"/>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform Y="-24.064" />
                 </TransformGroup>
             </Rectangle.RenderTransform>
         </Rectangle>
         <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18" Canvas.Top="-154" Width="593"/>
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
         </Canvas>
         <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18" Canvas.Top="-154" Width="593"/>
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
         </Canvas>
         <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18" Canvas.Top="-154" Width="593"/>
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
         </Canvas>
-        <Label x:Name="ChambreH" Content="Chambre H" HorizontalAlignment="Left" Margin="21,13,0,36" Width="88" Grid.Column="3" />
-        <Label x:Name="ChambreHV" Content="{Binding Chambre_Alain}" HorizontalAlignment="Left" Margin="10,13,0,36" Width="88" Grid.Column="4" />
-        <Label x:Name="ChambreF" Content="Chambre F" HorizontalAlignment="Left" Margin="20,58,0,80" Width="89" Grid.RowSpan="2" Grid.Column="3" />
-        <Label x:Name="ChambreFV" Content="{Binding Chambre_Beatrice}" HorizontalAlignment="Left" Margin="9,58,0,80" Width="89" Grid.RowSpan="2" Grid.Column="4" />
-        <Label x:Name="Salles" Content="Salles" HorizontalAlignment="Left" Margin="20,10,0,39" Width="89" Grid.Column="3" Grid.Row="1" />
-        <Label x:Name="SallesV" Content="{Binding Salle}" HorizontalAlignment="Left" Margin="10,10,0,39" Width="89" Grid.Column="4" Grid.Row="1" />
-        <Image x:Name="ImgLeg"  Grid.Row="3" Grid.Column="5" Grid.RowSpan="3" Source="{Binding SourceImg}" Margin="92,33,28,56" Grid.ColumnSpan="3" />
-        <Rectangle Fill="LightGray" Stroke="LightSkyBlue" StrokeThickness="4" Grid.ColumnSpan="6" Margin="15,88,53,16" Grid.RowSpan="4" RenderTransformOrigin="3.13,0.547" Grid.Row="2" >
-            <Rectangle.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="-24.064"/>
-                </TransformGroup>
-            </Rectangle.RenderTransform>
-        </Rectangle>
-        
-        <Label x:Name="d10" Content="j-7" HorizontalAlignment="Left" Margin="0,34,0,15" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="1" />
-        <Label x:Name="d11" Content="j-6" HorizontalAlignment="Left" Margin="21,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="1" />
-        <Label x:Name="d12" Content="j-5" HorizontalAlignment="Left" Margin="43,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" />
-        <Label x:Name="d13" Content="j-4" HorizontalAlignment="Left" Margin="65,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" />
-        <Label x:Name="d14" Content="j-3" HorizontalAlignment="Left" Margin="87,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" />
-        <Label x:Name="d15" Content="j-2" HorizontalAlignment="Left" Margin="110,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="1" />
-        <Label x:Name="d16" Content="j-1" HorizontalAlignment="Left" Margin="14,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="2" />
-        <Label x:Name="d21" Content="j" HorizontalAlignment="Left" Margin="39,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="2" />
-        <Label x:Name="d22" Content="j+1" HorizontalAlignment="Left" Margin="57,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="2" />
-        <Label x:Name="d23" Content="j+2" HorizontalAlignment="Left" Margin="86,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="2" />
-        <Label x:Name="d24" Content="j+3" HorizontalAlignment="Left" Margin="112,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="2" />
-        <Label x:Name="d25" Content="j+4" HorizontalAlignment="Left" Margin="24,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="3" />
-        <Label x:Name="d26" Content="j+5" HorizontalAlignment="Left" Margin="53,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="3" />
-        <Label x:Name="d30" Content="j+6" HorizontalAlignment="Left" Margin="81,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="3" />
-        <Label x:Name="d31" Content="j+7" HorizontalAlignment="Left" Margin="110,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="3" />
-        <Label x:Name="d32" Content="j+8" HorizontalAlignment="Left" Margin="20,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="4" />
-        <Label x:Name="d33" Content="j+9" HorizontalAlignment="Left" Margin="46,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="4" />
-        <Label x:Name="d34" Content="j+10" HorizontalAlignment="Left" Margin="70,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="4" />
-        <Label x:Name="d35" Content="j+11" HorizontalAlignment="Left" Margin="104,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="4" />
-        <Label x:Name="d36" Content="j+12" HorizontalAlignment="Left" Margin="21,33,0,16" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.Column="5" />
-        
-        <Label x:Name="RoomChbrH" Content="RoomChbrH" HorizontalAlignment="Left" Margin="30,83,0,55" Width="88" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.RowSpan="2" />
-        <Label x:Name="RoomChbrF" Content="RoomChbrF" HorizontalAlignment="Left" Margin="30,39,0,10" Width="89" Grid.Row="4" Grid.ColumnSpan="2" />
-        <Label x:Name="RoomSall" Content="RoomSall" HorizontalAlignment="Left" Margin="30,0,0,49" Width="89" Grid.Row="5" Grid.ColumnSpan="2" />
-        <Label x:Name="S1" Content="Semaine Précedente" HorizontalAlignment="Left" Margin="31,0,0,61" Width="146" Grid.Column="1" RenderTransformOrigin="-0.466,7.7" Grid.Row="3" Grid.ColumnSpan="2" />
-        <Label x:Name="S2" Content="Semaine cible" HorizontalAlignment="Left" Margin="77,0,0,61" Width="88" Grid.Column="2" Grid.Row="3" Grid.ColumnSpan="2" />
-        <Label x:Name="S3" Content="Semaine suivante" HorizontalAlignment="Left" Margin="0,0,0,61" Width="118" Grid.Column="4" Grid.Row="3" />
-        <!--oxy:PlotView Model="{Binding GraphModel}" Grid.Row="3"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="28,41,56,10" Grid.Column="2"  />
-        <oxy:PlotView  Model="{Binding ModelP1}" Grid.Column="5"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="94,29,26,57"  /-->
+        <Label x:Name="ChambreH" Content="Chambre H" HorizontalAlignment="Left" Margin="21,13,0,36" Width="88"
+               Grid.Column="3" />
+        <Label x:Name="ChambreHV" Content="{Binding Chambre_Alain}" HorizontalAlignment="Left" Margin="10,13,0,36"
+               Width="88" Grid.Column="4" />
+        <Label x:Name="ChambreF" Content="Chambre F" HorizontalAlignment="Left" Margin="20,58,0,80" Width="89"
+               Grid.RowSpan="2" Grid.Column="3" />
+        <Label x:Name="ChambreFV" Content="{Binding Chambre_Beatrice}" HorizontalAlignment="Left" Margin="9,58,0,80"
+               Width="89" Grid.RowSpan="2" Grid.Column="4" />
+        <Label x:Name="Salles" Content="Salles" HorizontalAlignment="Left" Margin="20,10,0,39" Width="89"
+               Grid.Column="3" Grid.Row="1" />
+        <Label x:Name="SallesV" Content="{Binding Salle}" HorizontalAlignment="Left" Margin="10,10,0,39" Width="89"
+               Grid.Column="4" Grid.Row="1" />
+        <Image x:Name="ImgLeg" Grid.Row="3" Grid.Column="5" Grid.RowSpan="3" Source="{Binding SourceImg}"
+               Margin="92,33,28,56" Grid.ColumnSpan="3" />
+
+        <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding Items}" Grid.ColumnSpan="5" Margin="10,79,10,10"
+                  Grid.RowSpan="4" Grid.Row="2" />
+
+        <oxy:PlotView  Model="{Binding ModelP1}" Grid.Column="5"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="94,29,26,57"  />
         <!-- -->
     </Grid>
 </Window>
