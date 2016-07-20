@@ -8,35 +8,71 @@
         Title="MainWindow" Height="564.706" Width="956.373">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="comboSalle" Grid.Row="4" SelectionChanged="comboSalle_SelectionChanged" Margin="10,16,10,32" Grid.ColumnSpan="2"/>
+        <Calendar x:Name="CalandarWeek" SelectionMode="SingleRange" HorizontalAlignment="Left" Margin="10,10,0,0"
+                  VerticalAlignment="Top" Grid.Row="0"
+                  Grid.RowSpan="3" Grid.ColumnSpan="3" Grid.Column="0" Height="247" Width="345"
+                  DisplayDateStart="2014-01-31" DisplayDateEnd="2014-09-25" DisplayDate="2014-01-31"
+                  SelectedDatesChanged="Calendar_SelectedDatesChanged" />
 
+        <Rectangle Fill="LightSkyBlue" Stroke="LightSkyBlue" StrokeThickness="4" Grid.ColumnSpan="5" Margin="1,0,-1,51"
+                   Grid.RowSpan="3" RenderTransformOrigin="3.13,0.547" Grid.Column="3">
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform Y="-24.064" />
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
+        </Canvas>
+        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
+        </Canvas>
+        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
+        </Canvas>
+        <Label x:Name="ChambreH" Content="Chambre H" HorizontalAlignment="Left" Margin="21,13,0,36" Width="88"
+               Grid.Column="3" />
+        <Label x:Name="ChambreHV" Content="{Binding Chambre_Alain}" HorizontalAlignment="Left" Margin="10,13,0,36"
+               Width="88" Grid.Column="4" />
+        <Label x:Name="ChambreF" Content="Chambre F" HorizontalAlignment="Left" Margin="20,58,0,80" Width="89"
+               Grid.RowSpan="2" Grid.Column="3" />
+        <Label x:Name="ChambreFV" Content="{Binding Chambre_Beatrice}" HorizontalAlignment="Left" Margin="9,58,0,80"
+               Width="89" Grid.RowSpan="2" Grid.Column="4" />
+        <Label x:Name="Salles" Content="Salles" HorizontalAlignment="Left" Margin="20,10,0,39" Width="89"
+               Grid.Column="3" Grid.Row="1" />
+        <Label x:Name="SallesV" Content="{Binding Salle}" HorizontalAlignment="Left" Margin="10,10,0,39" Width="89"
+               Grid.Column="4" Grid.Row="1" />
+        <Image x:Name="ImgLeg" Grid.Row="3" Grid.Column="5" Grid.RowSpan="3" Source="{Binding SourceImg}"
+               Margin="92,33,28,56" Grid.ColumnSpan="3" />
 
-        <Label x:Name="LabelSalle" Content="Veuillez saisir votre salle" HorizontalAlignment="Left" Margin="10,60,0,78" Width="217" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <oxy:PlotView Model="{Binding GraphModel}" Grid.Row="3"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="28,41,56,10" Grid.Column="2"  />
-        <oxy:PlotView  Model="{Binding modelP1}" Grid.Column="5"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="94,29,26,57"  />
-        <Image x:Name="ImgLeg"  Grid.Row="3" Grid.Column="5" Grid.RowSpan="3" Source="{Binding sourceImg}" Margin="76,60,44,29" Grid.ColumnSpan="3" />
-        <Button x:Name="BtnCam" Content="Afficher camembert" Grid.Column="3" Grid.RowSpan="1" Grid.ColumnSpan="2"  Margin="10,29,11,23" Click="btnCam_Click"/>
-        <Button x:Name="Button" Content="Search" Grid.Row="5" Click="button_Click" Margin="10,42,10,10" Grid.ColumnSpan="2" />
-        <ComboBox x:Name="ComboDate" Grid.Row="4" Margin="10,62,10,76" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-        <Calendar x:Name="CalandarWeek" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="0"
-                  Grid.RowSpan="3" Grid.ColumnSpan="3" Grid.Column="0" Height="247" Width="345" DisplayDateStart="2014-01-31" DisplayDateEnd="2014-09-25" DisplayDate="2014-01-31" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
+        <DataGrid AutoGenerateColumns="True" ItemsSource="{Binding Items}" Grid.ColumnSpan="5" Margin="10,79,10,10"
+                  Grid.RowSpan="4" Grid.Row="2" />
 
+        <oxy:PlotView  Model="{Binding ModelP1}" Grid.Column="5"   Grid.RowSpan="3" Grid.ColumnSpan="3" Margin="94,29,26,57"  />
+        <!-- -->
     </Grid>
 </Window>

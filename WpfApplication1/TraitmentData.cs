@@ -94,11 +94,11 @@ namespace HomePlotter
             }
         }
 
-        public void TimePresenceByRoom(ArrayList dateWeek)
+        public void TimePresenceByRoom(List<string> dateWeek)
         {
             foreach (var day in dateWeek)
             {
-                TimePresenceByRoom(day.ToString());
+                TimePresenceByRoom(day);
             }
         }
 
