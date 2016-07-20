@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Windows.Controls;
-using System.Windows.Data;
 using OxyPlot;
 using OxyPlot.Series;
-using DataGrid = System.Web.UI.WebControls.DataGrid;
-using DataGridColumn = System.Web.UI.WebControls.DataGridColumn;
 
 namespace HomePlotter
 {
@@ -45,7 +40,11 @@ namespace HomePlotter
 
         public Camembert(DateTime date)
         {
+
+            ModelP1 = new PlotModel { Title = "Camembert" };
+            SourceImg = Program.ImageHouse;
             Items = new DataTable();
+
             var dateWeeks = new List<List<string>>()
             {
                 WeekList(date.AddDays(-7)),
@@ -55,9 +54,6 @@ namespace HomePlotter
 
             var dateWeek = dateWeeks[1];
 
-            ModelP1 = new PlotModel {Title = "Camembert"};
-            SourceImg = Program.ImageHouse;
-
             if (dateWeek.Count <= 0)
             {
                 var serieEmpty = EmptyCamembert();
@@ -66,13 +62,41 @@ namespace HomePlotter
                 return;
             }
 
+            /**
+             * Prépare les données de temps de presence par jour
+             */
             var t = new TreatmentData();
-
             foreach (var week in dateWeeks)
             {
                 t.TimePresenceByRoom(week);
             }
 
+            /**
+             * Préparation des données de temps
+             */
+            var datas = new Dictionary<string, double>();
+            foreach (var day in dateWeek)
+            {
+                if (!TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(day)) continue;
+                foreach (var room in TreatmentData.PresenceByRoomHouresDictionary[day].Keys)
+                {
+                    var roomTime = TreatmentData.PresenceByRoomHouresDictionary[day][room];
+
+                    if (datas.ContainsKey(room))
+                    {
+                        datas[room] = datas[room] + roomTime;
+                    }
+                    else
+                    {
+                        datas.Add(room, roomTime);
+                    }
+                }
+            }
+            checkVariation(dateWeeks);
+
+            /**
+            * Préparation du graph
+            */
             dynamic seriesP1 = new PieSeries
             {
                 StrokeThickness = 2.0,
@@ -80,26 +104,6 @@ namespace HomePlotter
                 AngleSpan = 360,
                 StartAngle = 0,
             };
-            var datas = new Dictionary<string, double>();
-
-            foreach (var day in dateWeek)
-            {
-                if (TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(day))
-                    foreach (var room in TreatmentData.PresenceByRoomHouresDictionary[day].Keys)
-                    {
-                        var roomTime = TreatmentData.PresenceByRoomHouresDictionary[day][room];
-
-                        if (datas.ContainsKey(room))
-                        {
-                            datas[room] = datas[room] + roomTime;
-                        }
-                        else
-                        {
-                            datas.Add(room, roomTime);
-                        }
-                    }
-            }
-            checkVariation(dateWeeks);
 
             /**
              * Set le block le moyenne de temps passé dans les pieces dans la semaine selectyionné
@@ -124,7 +128,6 @@ namespace HomePlotter
         /**
          * Attend un List<List<string>> de 3 element minimum
          */
-
         private void checkVariation(IReadOnlyList<List<string>> weeksList)
         {
             if (weeksList.Count < 3)
@@ -142,19 +145,17 @@ namespace HomePlotter
                     dateCur,
                     dateNext
                 };
-                var variations = new List<Dictionary<string, double>>();
+
                 var rooms = new List<string>();
-                var j = 0;
+
                 foreach (var day in dates)
                 {
-                    variations.Add(new Dictionary<string, double>());
                     if (TreatmentData.PresenceByRoomHouresDictionary.ContainsKey(day))
                         foreach (var room in TreatmentData.PresenceByRoomHouresDictionary[day].Keys)
                         {
                             if (!rooms.Contains(room))
                                 rooms.Add(room);
                         }
-                    j++;
                 }
 
                 foreach (var room in rooms)
@@ -190,22 +191,18 @@ namespace HomePlotter
                     if (!DataTable[room].ContainsKey(dateNext))
                         DataTable[room].Add(dateNext, new List<string> {val3.ToString()});
 
-                    /*val1 = val1*100 + 1;
+                    val1 = val1*100 + 1;
                     val2 = val2*100 + 1;
-                    val3 = val3*100 + 1;*/
+                    val3 = val3*100 + 1;
 
-                    /*if (val1/val2 >= 20.0 || val1/val2 <= 20.0)
+                    if (val1/val2 >= 20.0 || val1/val2 <= 20.0)
                     {
-                        Console.Write(0);
+                        DataTable[room][dateCur].Add("1");
                     }
-                    if (val2/val3 >= 20.0 || val2/val3 <= 20.0)
+                    if (val2 / val3 >= 20.0 || val2 / val3 <= 20.0)
                     {
-                        Console.Write(2);
+                        DataTable[room][dateNext].Add("1");
                     }
-                    if (val3/val1 >= 20.0 || val3/val1 <= 20.0)
-                    {
-                        DataTable[room][]
-                    }*/
                 }
             }
 

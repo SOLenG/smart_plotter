@@ -27,7 +27,6 @@ namespace HomePlotter
             // ... See if a date is selected.
             if (calendar.SelectedDate.HasValue)
             {
-
                 var date = calendar.SelectedDate.Value;
                 Title = date.ToShortDateString();
                 DataContext = new Camembert(date);
