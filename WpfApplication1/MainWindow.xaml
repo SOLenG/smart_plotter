@@ -42,23 +42,11 @@
                 </TransformGroup>
             </Rectangle.RenderTransform>
         </Rectangle>
-        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
-                  Canvas.Top="-154" Width="593" />
-        </Canvas>
-        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
-                  Canvas.Top="-154" Width="593" />
-        </Canvas>
-        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
-            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
-                  Canvas.Top="-154" Width="593" />
-        </Canvas>
-        <Label x:Name="ChambreH" Content="Chambre H" HorizontalAlignment="Left" Margin="21,13,0,36" Width="88"
+        <Label x:Name="ChambreH" Content="Chambre Alain" HorizontalAlignment="Left" Margin="21,13,0,36" Width="88"
                Grid.Column="3" />
         <Label x:Name="ChambreHV" Content="{Binding Chambre_Alain}" HorizontalAlignment="Left" Margin="10,13,0,36"
                Width="88" Grid.Column="4" />
-        <Label x:Name="ChambreF" Content="Chambre F" HorizontalAlignment="Left" Margin="20,58,0,80" Width="89"
+        <Label x:Name="ChambreF" Content="Chambre Beatrice" HorizontalAlignment="Left" Margin="20,58,0,80" Width="89"
                Grid.RowSpan="2" Grid.Column="3" />
         <Label x:Name="ChambreFV" Content="{Binding Chambre_Beatrice}" HorizontalAlignment="Left" Margin="9,58,0,80"
                Width="89" Grid.RowSpan="2" Grid.Column="4" />
@@ -66,6 +54,11 @@
                Grid.Column="3" Grid.Row="1" />
         <Label x:Name="SallesV" Content="{Binding Salle}" HorizontalAlignment="Left" Margin="10,10,0,39" Width="89"
                Grid.Column="4" Grid.Row="1" />
+        <Canvas Grid.ColumnSpan="5" Grid.Column="3" Margin="14,60,-20,0" Grid.Row="3">
+            <Line X1="10" Y1="60" X2="500" Y2="60" Stroke="DarkGray" StrokeThickness="2" Canvas.Left="18"
+                  Canvas.Top="-154" Width="593" />
+        </Canvas>
+        
         <Image x:Name="ImgLeg" Grid.Row="3" Grid.Column="5" Grid.RowSpan="3" Source="{Binding SourceImg}"
                Margin="92,33,28,56" Grid.ColumnSpan="3" />
 
